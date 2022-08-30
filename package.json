@@ -1,0 +1,53 @@
+{
+  "name": "boilerplate-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env WITHCOOKIE=true next dev -p 6500",
+    "build": "next build",
+    "generate": "next build && next export",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@nextui-org/react": "^1.0.0-beta.10",
+    "@svgr/webpack": "^6.2.1",
+    "axios": "^0.27.2",
+    "classnames": "^2.3.1",
+    "cross-env": "^7.0.3",
+    "crypto": "^1.0.1",
+    "css-vars-ponyfill": "^2.4.7",
+    "dayjs": "^1.11.1",
+    "eslint-plugin-import": "^2.26.0",
+    "i18next": "^21.8.1",
+    "i18next-browser-languagedetector": "^6.1.4",
+    "js-cookie": "^3.0.1",
+    "lodash": "^4.17.21",
+    "next": "12.1.5",
+    "next-images": "^1.8.4",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-hook-form": "^7.30.0",
+    "react-i18next": "^11.16.9",
+    "react-query": "^3.38.1",
+    "react-responsive-carousel": "^3.2.23",
+    "react-spinners": "^0.11.0",
+    "react-toastify": "^8.2.0",
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11",
+    "zustand": "^3.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.31",
+    "@types/react": "18.0.8",
+    "@types/react-dom": "18.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint": "8.14.0",
+    "eslint-config-next": "12.1.5",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "node-sass": "^7.0.1",
+    "sass-loader": "^12.6.0",
+    "typescript": "4.6.4"
+  }
+}
