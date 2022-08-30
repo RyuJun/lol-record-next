@@ -1,8 +1,19 @@
+/* eslint-disable require-await */
 /** @type {import('next').NextConfig} */
 const withImages = require('next-images');
 
+const apiKey = 'RGAPI-4b3d4787-b483-40be-a4c7-52e2fe280f80';
+
 const nextConfig = withImages({
-  // reactStrictMode: false,
+  reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: '/lol/:path*',
+        destination: 'https://kr.api.riotgames.com/lol/:path*',
+      },
+    ];
+  },
   trailingSlash: true,
   fileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
   experimental: {

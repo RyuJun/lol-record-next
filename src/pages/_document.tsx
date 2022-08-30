@@ -9,14 +9,7 @@ export default function MyDocument() {
       <Head>{CssBaseline.flush()}</Head>
       <body>
         <Main />
-        <div
-          id="portals-modal"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            backgroundColor: '#f2f4f7',
-          }}
-        />
+        <div id="portals-modal" />
         <NextScript />
       </body>
     </Html>
