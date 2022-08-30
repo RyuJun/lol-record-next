@@ -2,8 +2,6 @@
 /** @type {import('next').NextConfig} */
 const withImages = require('next-images');
 
-const apiKey = 'RGAPI-4b3d4787-b483-40be-a4c7-52e2fe280f80';
-
 const nextConfig = withImages({
   reactStrictMode: true,
   async rewrites() {
