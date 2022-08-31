@@ -32,6 +32,20 @@ const Home: NextPage = (): React.ReactElement => {
   // if (isLoading) return <Loading size="md" />;
   return (
     <Layout>
+      <div
+        className="css-i7pvjw e1sjm9eu0"
+        style={{
+          position: 'absolute',
+          top: 50,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <img src="https://opgg-static.akamaized.net/logo/20220829091001.a10d5ec86a664da2963553fab72d467d.png?image=q_auto,f_png,w_auto&amp;v=1661751970892" alt="OP.GG logo (카서스)" title="카서스" />
+      </div>
       <Navbar isBordered variant="sticky" css={{ top: 'calc(50% - 38px)', background: 'transparent', border: 'none' }}>
         <Navbar.Brand css={{ '@xs': { w: '12%' } }}>
           <div className="logoWrapper logo-bg-animate">
