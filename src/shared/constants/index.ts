@@ -10,3 +10,5 @@ export const GLOBAL_STYLES = css`
     word-break: break-all;
   }
 `;
+
+export const DEFAULT_STAIL_TIME = 5000;

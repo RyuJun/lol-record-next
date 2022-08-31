@@ -15,6 +15,8 @@ const apiBase = function (defaultConfig: AxiosRequestConfig) {
     const { operation, data, headers, url } = config;
 
     switch (operation) {
+      case REQUESTS_OPERATION.GET:
+        return await api.get(url);
       case REQUESTS_OPERATION.PATCH:
         return await api.patch(url, data);
       case REQUESTS_OPERATION.POST:
