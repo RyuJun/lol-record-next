@@ -1,12 +1,8 @@
-import { Content } from '@/components/Content/Content';
+import { Box } from '@/components/Box/Box';
+import CustomNavbar from '@/components/CustomNavbar/CustomNavbar';
 import React from 'react';
-import { styled } from '@nextui-org/react';
 
-const Box = styled('div', {
-  boxSizing: 'border-box',
-});
-
-export const Layout = ({ children }) => (
+const Layout = ({ children }): React.ReactElement => (
   <Box
     css={{
       maxWidth: '100%',
@@ -15,7 +11,9 @@ export const Layout = ({ children }) => (
       height: '100%',
     }}
   >
+    <CustomNavbar />
     {children}
-    {/* <Content /> */}
   </Box>
 );
+
+export default Layout;
