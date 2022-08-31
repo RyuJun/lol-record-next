@@ -1,12 +1,10 @@
 import '@/styles/main.scss';
 
-import { Avatar, Dropdown, Link, Navbar, Text } from '@nextui-org/react';
 import { DARK_THEME, GLOBAL_STYLES, LIGHT_THEME } from '@/shared/constants';
 
 import { Global } from '@emotion/react';
 import { Hydrate } from 'react-query/hydration';
 import { I18nextProvider } from 'react-i18next';
-import { Layout } from '@/components/Layout/Layout';
 import NextApp from 'next/app';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { NextUIProvider } from '@nextui-org/react';
