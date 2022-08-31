@@ -255,6 +255,8 @@
   position: relative;
   max-width: 180px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
   &:after {
     content: '';
     position: absolute;
@@ -265,12 +267,17 @@
     background-image: linear-gradient(120deg, transparent, transparent, rgba(255, 255, 255, 0.226));
     animation: animation-16jpnkj 2.5s ease-in-out infinite;
   }
-  .NuxtLogo {
+  .logo {
     /* animation: 1s appear; */
     margin: auto;
   }
 }
-.theme-dark .dark\:logo-bg-animate {
+.dark-theme .logo-bg-animate {
+  .logo {
+    text {
+      fill: var(--nextui-colors-secondary);
+    }
+  }
   &:after {
     background-image: linear-gradient(120deg, transparent, transparent, #1a1c2342) !important;
   }

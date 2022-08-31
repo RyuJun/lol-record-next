@@ -9,12 +9,13 @@ const Box = styled('div', {
 export const Layout = ({ children }) => (
   <Box
     css={{
-      maxW: '100%',
+      maxWidth: '100%',
       position: 'relative',
       overflow: 'visible scroll',
+      height: '100%',
     }}
   >
     {children}
-    <Content />
+    {/* <Content /> */}
   </Box>
 );
