@@ -8,6 +8,8 @@ export const GLOBAL_STYLES = css`
     width: 100%;
     height: 100vh;
     word-break: break-all;
+    max-width: 900px;
+    margin: 0 auto;
   }
 `;
 
