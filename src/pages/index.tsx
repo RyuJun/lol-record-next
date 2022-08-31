@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import React from 'react';
 
 const Home: NextPage = (): React.ReactElement => {
+  console.log('re');
   return (
     <Layout>
       <div className="intro-wrapper">
