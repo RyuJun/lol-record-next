@@ -1,5 +1,8 @@
-import { styled } from '@nextui-org/react';
+import { BoxContainer } from './Box.constants';
+import React from 'react';
 
-export const Box = styled('div', {
-  boxSizing: 'border-box',
-});
+const Box = ({ children }): React.ReactElement => {
+  return <BoxContainer>{children}</BoxContainer>;
+};
+
+export default Box;
