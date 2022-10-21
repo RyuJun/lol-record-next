@@ -43,6 +43,7 @@ const CustomNavbar = (): React.ReactElement => {
       <Navbar className="navbar-wrapper" isBordered variant="sticky">
         <Navbar.Brand className="navbar-brand" hideIn="xs">
           <Logo />
+          ㅆㅆㅆㅆ
         </Navbar.Brand>
         {isSelectedSummoner && !isListVisible ? (
           <Navbar.Content className="navbar-summoner-info">

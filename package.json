@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "component": "node generateComponent.js",
-    "dev": "next dev -p 3002",
+    "dev": "cross-env WITHCOOKIE=true next dev -p 6500",
     "build": "next build",
     "generate": "next build && next export",
     "start": "next start",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@nextui-org/react": "^1.0.0-beta.10",
     "axios": "^0.27.2",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.1",
     "i18next": "^21.8.1",
     "js-cookie": "^3.0.1",
