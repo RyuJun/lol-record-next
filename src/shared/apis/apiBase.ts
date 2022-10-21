@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { IMutationProps } from '../utils/common.type';
-import { REQUESTS_OPERATION } from '../utils/common.constants';
+import { IMutationProps } from '@/shared//types/common.types';
+import { REQUESTS_OPERATION } from '@/shared/constants/common.constants';
 
 const apiBase = function (defaultConfig: AxiosRequestConfig) {
   const api = axios.create(defaultConfig);

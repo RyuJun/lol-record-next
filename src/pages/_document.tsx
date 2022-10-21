@@ -1,4 +1,5 @@
-import Document, { Head, Html, Main, NextScript } from 'next/document';
+/* eslint-disable @next/next/no-title-in-document-head */
+import { Head, Html, Main, NextScript } from 'next/document';
 
 import { CssBaseline } from '@nextui-org/react';
 import React from 'react';

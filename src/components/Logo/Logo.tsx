@@ -1,4 +1,4 @@
-import { LogoContainer } from './Logo.constants';
+import { LogoContainer } from '@/components/Logo/Logo.styles';
 import React from 'react';
 
 const Logo = (): React.ReactElement => {

@@ -21,6 +21,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["global.d.ts", "imagesCustom.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["global.d.ts", "images.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

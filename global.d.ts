@@ -1,7 +1,8 @@
 declare global {
   interface Window {
-    Kakao: any;
+    Document: any;
+    document: any;
   }
 }
-
-export const Kakao = global.Kakao;
+export const Document = global.Document;
+export const document = global.document;
