@@ -5,11 +5,7 @@ import type { NextPage } from 'next';
 import React from 'react';
 
 const Home: NextPage = (): React.ReactElement => {
-  return (
-    <HomeContainer>
-      <img src={MAIN_VISUAL.src} alt={MAIN_VISUAL.alt} title={MAIN_VISUAL.title} />
-    </HomeContainer>
-  );
+  return <HomeContainer />;
 };
 
 export default Home;

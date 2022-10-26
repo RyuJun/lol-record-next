@@ -9,9 +9,12 @@ export const HomeContainer = styled.main<React.CSSProperties>`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
 
-  img {
-    opacity: 0.4;
-    max-height: 400px;
-  }
+export const LoadingContainer = styled.div<React.CSSProperties>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `;

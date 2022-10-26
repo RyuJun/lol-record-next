@@ -3,12 +3,16 @@
 const withImages = require('next-images');
 
 const nextConfig = withImages({
-  // reactStrictMode: false,
+  reactStrictMode: false,
   async rewrites() {
     return [
       {
         source: '/lol/:path*',
         destination: 'https://kr.api.riotgames.com/lol/:path*',
+      },
+      {
+        source: '/asia/lol/:path*',
+        destination: 'https://asia.api.riotgames.com/lol/:path*',
       },
     ];
   },

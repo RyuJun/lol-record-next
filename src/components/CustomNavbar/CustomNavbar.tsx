@@ -1,31 +1,51 @@
-import { Card, Input, Navbar, Spacer, Text, User } from '@nextui-org/react';
-import { OPGG_IMG_URL, REQUESTS_OPERATION } from '@/shared/constants/common.constants';
-import React, { useId, useMemo, useRef, useState } from 'react';
+/* eslint-disable curly */
+/* eslint-disable multiline-ternary */
+/* eslint-disable @typescript-eslint/indent */
+import { Card, Input, Navbar, Text, User } from '@nextui-org/react';
+import React, { useCallback, useEffect, useId, useState } from 'react';
 
 import { CustomNavbarContainer } from './CustomNavbar.styles';
-import { IMutationProps } from '@/shared/types/common.types';
 import { Loading } from '@nextui-org/react';
+import { LocalStorage } from '@/shared/configs/storage';
 import Logo from '@/components/Logo/Logo';
-import QUERY_KEYS from '@/shared/apis/queryKeys';
+import { OPGG_IMG_URL } from '@/shared/constants/common.constants';
 import { RiotAPI } from '@/shared/apis/RiotApi';
 import { SearchIcon } from '@/components/SearchIcon/SearchIcon';
 import debounce from 'lodash/debounce';
-import { setConstantValue } from 'typescript';
-import styled from '@emotion/styled';
-import { useMutation } from 'react-query';
-import useQueryGetSummoners from './CustomNavbar.hooks';
+import { useRouter } from 'next/router';
+import { useSummonerStore } from '@/stores/useSummonerStore';
 
 const CustomNavbar = (): React.ReactElement => {
+  const { summoner, setSummoner } = useSummonerStore();
+
+  const [isSelectedSummoner, setIsSelectedSummoner] = useState(false);
   const [isListVisible, setIsListVisible] = useState(false);
   const [loading, setIsLoading] = useState(null);
-  const [isSelectedSummoner, setIsSelectedSummoner] = useState(false);
-  const [summoner, setSummoner] = useState(null);
+  const [recentUser, setRecentUser] = useState([]);
+
   const searchInputId = useId();
 
-  const { data: summonerData, isFetching }: any = useQueryGetSummoners(null);
-  const getProfileIconSrc = useMemo(() => `${OPGG_IMG_URL}/profile_icons/profileIcon${summoner?.profileIconId}.jpg`, [summoner]);
+  const router = useRouter();
+  const profileIconSrc = useCallback((profileIconId) => `${OPGG_IMG_URL}/profile_icons/profileIcon${profileIconId}.jpg`, []);
 
-  const handleSearchSummoner = debounce((e) => {
+  const handleOnMoveDetail = (userInfo) => {
+    setIsSelectedSummoner(true);
+    setIsListVisible(false);
+
+    if (!recentUser.filter((user) => user.name === userInfo.name).length) {
+      LocalStorage.setItem('recentUser', JSON.stringify([...recentUser, userInfo]));
+    }
+
+    router.push(`/detail/${userInfo.puuid}?&summonerId=${userInfo.id}`);
+  };
+
+  const handleOnReset = () => {
+    setSummoner(null);
+    setIsSelectedSummoner(false);
+    setIsListVisible(false);
+  };
+
+  const handleOnSearchSummoner = debounce((e) => {
     if (e.target.value.length) {
       setIsLoading(true);
       RiotAPI.get(`/summoner/v4/summoners/by-name/${encodeURI(e.target.value)}`)
@@ -36,18 +56,26 @@ const CustomNavbar = (): React.ReactElement => {
         .catch(() => setIsLoading(false))
         .finally(() => setIsLoading(false));
     }
-  }, 1000);
+  }, 500);
+
+  useEffect(() => {
+    setRecentUser(JSON.parse(LocalStorage.getItem('recentUser') || '[]'));
+  }, [isListVisible]);
+
+  useEffect(() => {
+    if (!summoner) router.push('/');
+    if (router.pathname === '/') handleOnReset();
+  }, [router.pathname]);
 
   return (
     <CustomNavbarContainer isSelectedSummoner={isSelectedSummoner} isListVisible={isListVisible}>
       <Navbar className="navbar-wrapper" isBordered variant="sticky">
         <Navbar.Brand className="navbar-brand" hideIn="xs">
           <Logo />
-          ㅆㅆㅆㅆ
         </Navbar.Brand>
-        {isSelectedSummoner && !isListVisible ? (
+        {isSelectedSummoner && !isListVisible && summoner ? (
           <Navbar.Content className="navbar-summoner-info">
-            <User src={getProfileIconSrc} name={`${summonerData.name} (lv)${summonerData.summonerLevel}`} size="lg" />
+            <User src={profileIconSrc(summoner.profileIconId)} name={`${summoner.name} (lv ${summoner.summonerLevel})`} size="lg" />
           </Navbar.Content>
         ) : null}
         <Navbar.Content className="navbar-summoner-search-area">
@@ -63,35 +91,41 @@ const CustomNavbar = (): React.ReactElement => {
                 contentLeft={<SearchIcon fill="var(--nextui-colors-accents6)" size={16} />}
                 contentLeftStyling={false}
                 onFocus={() => setIsListVisible(true)}
-                onBlur={() => setTimeout(() => setIsListVisible(false), 1000)}
+                onBlur={() => setTimeout(() => setIsListVisible(false), 500)}
                 onClearClick={() => setIsListVisible(false)}
-                onChange={handleSearchSummoner}
+                onChange={handleOnSearchSummoner}
               />
               <Card className="navbar-summoner-search-list">
                 <Card.Body>
-                  <Text h6>Result</Text>
+                  <Text h6>검색결과</Text>
                   {!summoner || loading ? (
                     <div className="flex-container justify-center items-center w-full h-full">
-                      <Loading type="gradient" size="sm" color="secondary" />
+                      <Loading type="points-opacity" size="sm" color="secondary" />
                     </div>
                   ) : (
                     <User
-                      src={getProfileIconSrc}
-                      name={`${summoner.name} (lv)${summoner.summonerLevel}`}
+                      src={profileIconSrc(summoner.profileIconId)}
+                      name={`${summoner.name} (lv ${summoner.summonerLevel})`}
                       size="lg"
-                      onClick={() => {
-                        setIsSelectedSummoner(true);
-                        setIsListVisible(false);
-                      }}
+                      onClick={() => handleOnMoveDetail(summoner)}
                     />
                   )}
 
-                  <Spacer />
-                  <Text h6>Recent Result</Text>
-                  <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" size="lg" />
-                  <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" size="lg" />
-                  <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" size="lg" />
-                  <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" size="lg" />
+                  <Text h6>최근 검색기록</Text>
+                  {recentUser.length
+                    ? recentUser.map((user) => (
+                        <User
+                          key={user.id}
+                          src={profileIconSrc(user.profileIconId)}
+                          name={`${user.name} (lv ${user.summonerLevel})`}
+                          size="lg"
+                          onClick={() => {
+                            setSummoner(user);
+                            handleOnMoveDetail(user);
+                          }}
+                        />
+                      ))
+                    : null}
                 </Card.Body>
               </Card>
             </>
