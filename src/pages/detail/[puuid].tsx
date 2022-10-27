@@ -43,8 +43,8 @@ const Summoner = ({ matchList }): React.ReactElement => {
   const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 20, type: 'ranked' });
   const { data: detailData, isFetching: detailIsFetching } = useQueryGetMatches(matchList);
 
-  const getWins = useMemo(() => filter(detailData, (detail) => filter(detail.info.participants, (user) => user.summonerId === summoner.id && user.win).length), [detailData]);
-  const getLose = useMemo(() => filter(detailData, (detail) => filter(detail.info.participants, (user) => user.summonerId === summoner.id && !user.win).length), [detailData]);
+  // const getWins = useMemo(() => filter(detailData, (detail) => filter(detail.info.participants, (user) => user.summonerId === summoner.id && user.win).length), [detailData]);
+  // const getLose = useMemo(() => filter(detailData, (detail) => filter(detail.info.participants, (user) => user.summonerId === summoner.id && !user.win).length), [detailData]);
 
   return (
     <SummonerContainer>
@@ -80,7 +80,7 @@ const Summoner = ({ matchList }): React.ReactElement => {
             </Card.Header>
             <Card.Divider />
             <Card.Body css={{ gap: 20 }}>
-              <Row wrap="nowrap" justify="space-between" align="center">
+              {/* <Row wrap="nowrap" justify="space-between" align="center">
                 <Progress css={{ flexBasis: '70%', flexShrink: 0 }} value={30} shadow color="secondary" status="secondary" />
                 <Col>
                   <Text
@@ -88,7 +88,7 @@ const Summoner = ({ matchList }): React.ReactElement => {
                   >{`${detailData.length}전 ${getWins.length}승 ${getLose.length}패`}</Text>
                 </Col>
               </Row>
-              <Text> {`승률 ${Math.floor(getWiningRate(getWins.length, getLose.length))}%`}</Text>
+              <Text> {`승률 ${Math.floor(getWiningRate(getWins.length, getLose.length))}%`}</Text> */}
 
               {/* <Text css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm', textAlign: 'right' }}>{`20전 ${getWins.length}승 ${getLose.length}패`}</Text> */}
             </Card.Body>
