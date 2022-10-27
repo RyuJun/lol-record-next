@@ -64,6 +64,8 @@ const CustomNavbar = (): React.ReactElement => {
 
   useEffect(() => {
     if (!summoner) router.push('/');
+    else setIsSelectedSummoner(true);
+
     if (router.pathname === '/') handleOnReset();
   }, [router.pathname]);
 
