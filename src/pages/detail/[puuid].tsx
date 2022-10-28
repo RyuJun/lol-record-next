@@ -1,11 +1,10 @@
-import { Card, Col, Collapse, Container, Grid, Progress, Row, Table, Text, Tooltip, User, red } from '@nextui-org/react';
+import { Avatar, Card, Col, Collapse, Container, Grid, Progress, Row, Text, User, red } from '@nextui-org/react';
 import { OPGG_ICON_URL, OPGG_IMG_URL, RIOT_API_URL } from '@/shared/constants/common.constants';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { filter, find, forEach, groupBy, map, max, reduce, unionBy } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { find, forEach, groupBy, reduce } from 'lodash';
 import useQueryGetMatches, { Participant } from '@/hooks/useQueryGetMatches.hooks';
 
 import { Nullable } from '@/shared/types/common.types';
-import Router from 'next/router';
 import { SummonerContainer } from '@/shared/styles/pages/summoner';
 import dayjs from 'dayjs';
 import { dehydrate } from 'react-query';
@@ -18,7 +17,7 @@ export async function getServerSideProps(ctx) {
   const { query } = ctx;
   const { puuid, summonerId } = query;
 
-  const matchList = await useQueryGetMatchesIds.fetcher(puuid, 0, 2, 'ranked', RIOT_API_URL.asia);
+  const matchList = await useQueryGetMatchesIds.fetcher(puuid, 0, 10, 'ranked', RIOT_API_URL.asia);
 
   await Promise.all([
     queryClient.prefetchQuery(useQueryGetLeague.getKeys(), () => useQueryGetLeague.fetcher(summonerId, RIOT_API_URL.kr)),
@@ -55,7 +54,7 @@ interface IGetMyStatus {
 const Summoner = ({ matchList }): React.ReactElement => {
   const { summoner } = useSummonerStore();
   const { data: leagueData, isFetching: leagueFetching } = useQueryGetLeague(summoner?.id);
-  const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 2, type: 'ranked' });
+  const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 10, type: 'ranked' });
   const { data: detailData, isFetching: detailIsFetching } = useQueryGetMatches(matchList);
 
   const [myStatus, setMyStatus] = useState<IGetMyStatus>({ win: [], lose: [], mygames: [], participants: [], favorites: null });
@@ -145,7 +144,7 @@ const Summoner = ({ matchList }): React.ReactElement => {
             </Card.Header>
             <Card.Divider />
             <Card.Body css={{ justifyContent: 'center' }}>
-              <Row wrap="wrap" justify="space-between" align="center">
+              <Row wrap="wrap" justify="space-between" align="flex-start" css={{ gap: 10 }}>
                 <User
                   src={`${OPGG_IMG_URL}/lol/champion/${myStatus.favorites.champion[0].championName}.png`}
                   name={`${myStatus.favorites.champion[0].championName}`}
@@ -182,21 +181,24 @@ const Summoner = ({ matchList }): React.ReactElement => {
                         </Container>
                       </Grid>
                       <Grid sm={5}>
-                        <User
-                          src={`${OPGG_IMG_URL}/lol/champion/${myStatus.favorites.champion[0].championName}.png`}
-                          name={`${myStatus.favorites.champion[0].championName}`}
-                          description={`${detailData.length}전 중 ${myStatus.favorites.champion.length}게임`}
-                          size="lg"
-                        />
+                        <Container display="flex" css={{ gap: 5 }}>
+                          <Row>
+                            <User
+                              css={{ zIndex: 0, padding: 0 }}
+                              src={`${OPGG_IMG_URL}/lol/champion/${myStatus.favorites.champion[0].championName}.png`}
+                              name={`${mygame.kills} / ${mygame.deaths} / ${mygame.assists}`}
+                              description={`${((mygame.kills + mygame.assists) / mygame.deaths).toFixed(1)} 평점`}
+                              size="lg"
+                            />
+                          </Row>
+                          <Row css={{ gap: 5 }}>
+                            {new Array(6).fill(null).map((_, i) => (
+                              <Avatar key={`item_${i}`} css={{ zIndex: 0 }} squared src={`${OPGG_IMG_URL}/lol/item/${mygame[`item${i}`]}.png`} size="xs" />
+                            ))}
+                          </Row>
+                        </Container>
                       </Grid>
-                      <Grid sm={5}>
-                        <User
-                          src={`${OPGG_IMG_URL}/lol/champion/${myStatus.favorites.champion[0].championName}.png`}
-                          name={`${myStatus.favorites.champion[0].championName}`}
-                          description={`${detailData.length}전 중 ${myStatus.favorites.champion.length}게임`}
-                          size="lg"
-                        />
-                      </Grid>
+                      <Grid sm={5}></Grid>
                     </Grid.Container>
                   }
                 >
