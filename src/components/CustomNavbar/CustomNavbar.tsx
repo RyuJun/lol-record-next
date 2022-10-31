@@ -8,7 +8,7 @@ import { CustomNavbarContainer } from './CustomNavbar.styles';
 import { Loading } from '@nextui-org/react';
 import { LocalStorage } from '@/shared/configs/storage';
 import Logo from '@/components/Logo/Logo';
-import { OPGG_IMG_URL } from '@/shared/constants/common.constants';
+import { CDNS, OPGG_IMG_URL } from '@/shared/constants/common.constants';
 import { RiotAPI } from '@/shared/apis/RiotApi';
 import { SearchIcon } from '@/components/SearchIcon/SearchIcon';
 import debounce from 'lodash/debounce';
@@ -26,7 +26,6 @@ const CustomNavbar = (): React.ReactElement => {
   const searchInputId = useId();
 
   const router = useRouter();
-  const profileIconSrc = useCallback((profileIconId) => `${OPGG_IMG_URL}/profile_icons/profileIcon${profileIconId}.jpg`, []);
 
   const handleOnMoveDetail = (userInfo) => {
     setIsSelectedSummoner(true);
@@ -77,7 +76,7 @@ const CustomNavbar = (): React.ReactElement => {
         </Navbar.Brand>
         {isSelectedSummoner && !isListVisible && summoner ? (
           <Navbar.Content className="navbar-summoner-info">
-            <User src={profileIconSrc(summoner.profileIconId)} name={`${summoner.name} (lv ${summoner.summonerLevel})`} size="lg" />
+            <User src={CDNS.profile_icon(summoner.profileIconId)} name={`${summoner.name} (lv ${summoner.summonerLevel})`} size="lg" />
           </Navbar.Content>
         ) : null}
         <Navbar.Content className="navbar-summoner-search-area">
@@ -106,7 +105,7 @@ const CustomNavbar = (): React.ReactElement => {
                     </div>
                   ) : (
                     <User
-                      src={profileIconSrc(summoner.profileIconId)}
+                      src={CDNS.profile_icon(summoner.profileIconId)}
                       name={`${summoner.name} (lv ${summoner.summonerLevel})`}
                       size="lg"
                       onClick={() => handleOnMoveDetail(summoner)}
@@ -118,7 +117,7 @@ const CustomNavbar = (): React.ReactElement => {
                     ? recentUser.map((user) => (
                         <User
                           key={user.id}
-                          src={profileIconSrc(user.profileIconId)}
+                          src={CDNS.profile_icon(user.profileIconId)}
                           name={`${user.name} (lv ${user.summonerLevel})`}
                           size="lg"
                           onClick={() => {

@@ -10,10 +10,10 @@ const fullHeight = css`
   height: 100%;
 `;
 
-const fontDfaultAlternativeFamily = `-apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
+const fontDfaultAlternativeFamily = `Roboto, -apple-system, BlinkMacSystemFont, system-ui, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif`;
 
-const fontDfaultFamily = `Pretendard, ${fontDfaultAlternativeFamily}`;
+const fontDfaultFamily = `Noto Sans, ${fontDfaultAlternativeFamily}`;
 
 export const Variables = {
   fontDfaultFamily,

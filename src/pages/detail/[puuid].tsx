@@ -1,10 +1,10 @@
-import { Avatar, Card, Col, Collapse, Container, Grid, Progress, Row, Text, User, red } from '@nextui-org/react';
-import { OPGG_ICON_URL, OPGG_IMG_URL, RIOT_API_URL } from '@/shared/constants/common.constants';
+import { Avatar, Card, Col, Collapse, Container, Grid, Progress, Row, Text, User, Badge, Tooltip } from '@nextui-org/react';
+import { CDNS, getDisplayedAt, getQueueType, getWiningRate, OPGG_ICON_URL, OPGG_IMG_URL, RIOT_API_URL } from '@/shared/constants/common.constants';
 import React, { useEffect, useState } from 'react';
 import { find, forEach, groupBy, reduce } from 'lodash';
-import useQueryGetMatches, { Participant } from '@/hooks/useQueryGetMatches.hooks';
+import useQueryGetMatches from '@/hooks/useQueryGetMatches.hooks';
 
-import { Nullable } from '@/shared/types/common.types';
+import { ICampionJson, IGetMyStatus } from '@/shared/types/common.types';
 import { SummonerContainer } from '@/shared/styles/pages/summoner';
 import dayjs from 'dayjs';
 import { dehydrate } from 'react-query';
@@ -12,12 +12,14 @@ import queryClient from '@/shared/configs/queryClient';
 import useQueryGetLeague from '@/hooks/useQueryGetLeague.hooks';
 import useQueryGetMatchesIds from '@/hooks/useQueryGetMatchesIds.hooks';
 import { useSummonerStore } from '@/stores/useSummonerStore';
+import { RiotAPI } from '@/shared/apis/RiotApi';
+import { CDNAPI } from '@/shared/apis/CdnApi';
 
 export async function getServerSideProps(ctx) {
   const { query } = ctx;
   const { puuid, summonerId } = query;
 
-  const matchList = await useQueryGetMatchesIds.fetcher(puuid, 0, 10, 'ranked', RIOT_API_URL.asia);
+  const matchList = await useQueryGetMatchesIds.fetcher(puuid, 0, 2, 'ranked', RIOT_API_URL.asia);
 
   await Promise.all([
     queryClient.prefetchQuery(useQueryGetLeague.getKeys(), () => useQueryGetLeague.fetcher(summonerId, RIOT_API_URL.kr)),
@@ -27,37 +29,14 @@ export async function getServerSideProps(ctx) {
   return { props: { dehydratedState: dehydrate(queryClient), matchList } };
 }
 
-const getQueueType = (type) => {
-  switch (type) {
-    case 'RANKED_SOLO_5x5':
-      return '솔로 랭크';
-    default:
-      return '';
-  }
-};
-const getWiningRate = (win, lose) => (win / (win + lose)) * 100;
-
-interface IFavorites {
-  champion: Nullable<Participant[]>;
-  lane: Nullable<Participant[]>;
-  role: Nullable<Participant[]>;
-}
-
-interface IGetMyStatus {
-  win: Participant[];
-  lose: Participant[];
-  favorites: Nullable<IFavorites>;
-  mygames: Participant[];
-  participants: Participant[];
-}
-
 const Summoner = ({ matchList }): React.ReactElement => {
   const { summoner } = useSummonerStore();
   const { data: leagueData, isFetching: leagueFetching } = useQueryGetLeague(summoner?.id);
-  const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 10, type: 'ranked' });
+  const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 2, type: 'ranked' });
   const { data: detailData, isFetching: detailIsFetching } = useQueryGetMatches(matchList);
 
   const [myStatus, setMyStatus] = useState<IGetMyStatus>({ win: [], lose: [], mygames: [], participants: [], favorites: null });
+  const [tooltipContent, setTooltipContent] = useState(null);
 
   useEffect(() => {
     const result = { win: [], lose: [], mygames: [], participants: [], favorites: null };
@@ -91,6 +70,21 @@ const Summoner = ({ matchList }): React.ReactElement => {
     }
   }, [detailData, summoner]);
 
+  const handleGetToolTipChamp = (visible, champ) => {
+    if (visible && champ) {
+      CDNAPI.get(CDNS.champion_json(champ)).then((champDetail: Partial<ICampionJson>) => {
+        const detail = champDetail.data[champ];
+        setTooltipContent(
+          <Container display="flex" direction="column" css={{ gap: 5, padding: 0, hedight: 30, overflowY: 'auto' }}>
+            <User src={CDNS.champion_img(champ)} name={detail.name} description={detail.title} size="xl" />
+            <Text css={{ color: '$accents7', fontSize: '$xs' }}>{detail.blurb}</Text>
+          </Container>
+        );
+      });
+    }
+  };
+
+  if (!detailData.length) return <></>;
   if (!myStatus.favorites) return <></>;
 
   return (
@@ -145,12 +139,19 @@ const Summoner = ({ matchList }): React.ReactElement => {
             <Card.Divider />
             <Card.Body css={{ justifyContent: 'center' }}>
               <Row wrap="wrap" justify="space-between" align="flex-start" css={{ gap: 10 }}>
-                <User
-                  src={`${OPGG_IMG_URL}/lol/champion/${myStatus.favorites.champion[0].championName}.png`}
-                  name={`${myStatus.favorites.champion[0].championName}`}
-                  description={`${myStatus.mygames.length}전 중 ${myStatus.favorites.champion.length}게임`}
-                  size="lg"
-                />
+                <Tooltip
+                  content={tooltipContent}
+                  placement="rightStart"
+                  rounded
+                  onVisibleChange={(visible) => handleGetToolTipChamp(visible, myStatus.favorites.champion[0].championName)}
+                >
+                  <User
+                    src={`${OPGG_IMG_URL}/lol/champion/${myStatus.favorites.champion[0].championName}.png`}
+                    name={`${myStatus.favorites.champion[0].championName}`}
+                    description={`${myStatus.mygames.length}전 중 ${myStatus.favorites.champion.length}게임`}
+                    size="lg"
+                  />
+                </Tooltip>
                 <User
                   src={`${OPGG_ICON_URL}/icon/icon-position-${myStatus.favorites.role[0].role.toLowerCase()}.svg`}
                   name={`${myStatus.favorites.role[0].role}`}
@@ -171,7 +172,8 @@ const Summoner = ({ matchList }): React.ReactElement => {
                   title={
                     <Grid.Container gap={2} justify="flex-start">
                       <Grid sm={2}>
-                        <Container>
+                        <Container display="flex" direction="column" css={{ gap: 5, padding: 0 }}>
+                          <Badge color="secondary"> {getDisplayedAt(dayjs().diff(dayjs(Number(detail.info.gameEndTimestamp)), 'minute'))}</Badge>
                           <Text css={{ color: '$accents7', fontWeight: '$semibold', fontSize: '$sm' }}>{`${dayjs(
                             detail.info.gameEndTimestamp - detail.info.gameStartTimestamp
                           ).format('mm분 ss초')}`}</Text>
