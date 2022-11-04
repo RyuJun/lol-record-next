@@ -12,8 +12,7 @@ import queryClient from '@/shared/configs/queryClient';
 import useQueryGetLeague from '@/hooks/useQueryGetLeague.hooks';
 import useQueryGetMatchesIds from '@/hooks/useQueryGetMatchesIds.hooks';
 import { useSummonerStore } from '@/stores/useSummonerStore';
-import { RiotAPI } from '@/shared/apis/RiotApi';
-import { CDNAPI } from '@/shared/apis/CdnApi';
+import { CdnApi } from '@/shared/apis/CDNApi';
 
 export async function getServerSideProps(ctx) {
   const { query } = ctx;
@@ -72,7 +71,7 @@ const Summoner = ({ matchList }): React.ReactElement => {
 
   const handleGetToolTipChamp = (visible, champ) => {
     if (visible && champ) {
-      CDNAPI.get(CDNS.champion_json(champ)).then((champDetail: Partial<ICampionJson>) => {
+      CdnApi.get(CDNS.champion_json(champ)).then((champDetail: Partial<ICampionJson>) => {
         const detail = champDetail.data[champ];
         setTooltipContent(
           <Container display="flex" direction="column" css={{ gap: 5, padding: 0, hedight: 30, overflowY: 'auto' }}>
