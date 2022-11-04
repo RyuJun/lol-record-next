@@ -12,13 +12,13 @@ import queryClient from '@/shared/configs/queryClient';
 import useQueryGetLeague from '@/hooks/useQueryGetLeague.hooks';
 import useQueryGetMatchesIds from '@/hooks/useQueryGetMatchesIds.hooks';
 import { useSummonerStore } from '@/stores/useSummonerStore';
-import { CdnApi } from '@/shared/apis/CdnApitest';
+import { CdnApi } from '@/shared/apis/CdnApi';
 
 export async function getServerSideProps(ctx) {
   const { query } = ctx;
   const { puuid, summonerId } = query;
 
-  const matchList = await useQueryGetMatchesIds.fetcher(puuid, 0, 2, 'ranked', RIOT_API_URL.asia);
+  const matchList = await useQueryGetMatchesIds.fetcher(puuid, 0, 10, 'ranked', RIOT_API_URL.asia);
 
   await Promise.all([
     queryClient.prefetchQuery(useQueryGetLeague.getKeys(), () => useQueryGetLeague.fetcher(summonerId, RIOT_API_URL.kr)),
@@ -31,7 +31,7 @@ export async function getServerSideProps(ctx) {
 const Summoner = ({ matchList }): React.ReactElement => {
   const { summoner } = useSummonerStore();
   const { data: leagueData, isFetching: leagueFetching } = useQueryGetLeague(summoner?.id);
-  const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 2, type: 'ranked' });
+  const { data: idsData, isFetching: idsIsFetching } = useQueryGetMatchesIds({ initialData: matchList, puuid: summoner?.puuid, start: 0, count: 10, type: 'ranked' });
   const { data: detailData, isFetching: detailIsFetching } = useQueryGetMatches(matchList);
 
   const [myStatus, setMyStatus] = useState<IGetMyStatus>({ win: [], lose: [], mygames: [], participants: [], favorites: null });
