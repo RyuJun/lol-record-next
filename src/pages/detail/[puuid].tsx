@@ -12,7 +12,7 @@ import queryClient from '@/shared/configs/queryClient';
 import useQueryGetLeague from '@/hooks/useQueryGetLeague.hooks';
 import useQueryGetMatchesIds from '@/hooks/useQueryGetMatchesIds.hooks';
 import { useSummonerStore } from '@/stores/useSummonerStore';
-import { CdnApi } from '@/shared/apis/CDNApi';
+import { CdnApi } from '@/shared/apis/CdnApitest';
 
 export async function getServerSideProps(ctx) {
   const { query } = ctx;
